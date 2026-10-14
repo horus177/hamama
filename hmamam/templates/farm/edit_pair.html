@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block title %}تعديل القص {{ pair.pair_code }} - مزرعتي{% endblock %}
+
+{% block content %}
+<div class="container py-4" style="max-width: 700px;">
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-primary text-white fw-bold d-flex justify-content-between align-items-center py-3">
+            <span>✏️ تعديل بيانات القص أو تبديل فرد: {{ pair.pair_code }}</span>
+            <a href="{% url 'pair_detail' pair.id %}" class="btn btn-sm btn-light text-dark">إلغاء</a>
+        </div>
+        <div class="card-body p-4">
+            <div class="alert alert-info border-0 mb-4">
+                💡 <strong>ملاحظة:</strong> إذا مات أحد الأفراد أو أردت إدخال فرد جديد، يمكنك تحديث (النوع/السلالة)، تفاصيل الذكر أو الأنثى، وإرفاق **صورة جديدة للقص**.
+            </div>
+
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <div class="mb-3">
+                    <label class="form-label fw-bold">كود / اسم القص</label>
+                    {{ form.pair_code }}
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">النوع / السلالة الحالية</label>
+                        {{ form.breed }}
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">المكان / الغرفة</label>
+                        {{ form.loft_or_room }}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">تفاصيل الذكر (أو البديل)</label>
+                        {{ form.male_details }}
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">تفاصيل الأنثى (أو البديلة)</label>
+                        {{ form.female_details }}
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">صورة القص الجديدة (اختياري)</label>
+                    {% if pair.image %}
+                        <div class="mb-2">
+                            <img src="{{ pair.image.url }}" class="img-thumbnail" style="height: 100px; object-fit: cover;">
+                            <small class="text-muted ms-2">الصورة الحالية</small>
+                        </div>
+                    {% endif %}
+                    {{ form.image }}
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-bold">ملاحظات والتحديثات</label>
+                    {{ form.notes }}
+                </div>
+
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-success fw-bold py-2">
+                        💾 حفظ التعديلات والبيانات الجديدة
+                    </button>
+                    <a href="{% url 'pairs_list' %}" class="btn btn-outline-secondary">
+                        العودة لقائمة الأقصاص
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

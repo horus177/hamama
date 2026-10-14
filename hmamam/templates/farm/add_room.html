@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block title %}إضافة غرفة جديدة - مزرعتي{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-secondary text-white text-center py-3">
+                    <h5 class="card-title fw-bold m-0">🏠 إضافة غية أو غرفة تربية جديدة</h5>
+                </div>
+                <div class="card-body p-4">
+                    <form method="POST">
+                        {% csrf_token %}
+
+                        <!-- اسم الغرفة -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">اسم الغرفة / الغية <span class="text-danger">*</span></label>
+                            <input type="text" name="name" class="form-control" placeholder="مثال: الغرفة الشرقية، غية السطوح..." required>
+                        </div>
+
+                        <!-- أزرار الإرسال والإلغاء -->
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-secondary btn-lg fw-bold">حفظ الغرفة</button>
+                            <a href="{% url 'farm_home' %}" class="btn btn-outline-secondary">إلغاء وعودة</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

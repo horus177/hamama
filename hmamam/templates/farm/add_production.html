@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block title %}تسجيل إنتاج جديد - مزرعتي{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-7">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-warning text-dark text-center py-3">
+                    <h5 class="card-title fw-bold m-0">🪺 تسجيل إنتاج جديد (حصى / زغاليل / نافق)</h5>
+                </div>
+                <div class="card-body p-4">
+                    <form method="POST">
+                        {% csrf_token %}
+
+                        <!-- اختيار القص -->
+                        {% if pairs %}
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">القص (سلاكات)</label>
+                            <select name="pair" class="form-select">
+                                <option value="">-- اختر القص (اختياري) --</option>
+                                {% for pair in pairs %}
+                                    <option value="{{ pair.id }}">قص: {{ pair.pair_code }} - سلالة: {{ pair.breed|default:"غير محددة" }} ({{ pair.loft_or_room.name }})</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        {% endif %}
+
+                        <!-- اختيار الغرفة -->
+                        {% if rooms %}
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">الغرفة / الغية</label>
+                            <select name="room" class="form-select">
+                                <option value="">-- اختر الغرفة --</option>
+                                {% for room in rooms %}
+                                    <option value="{{ room.id }}">{{ room.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        {% endif %}
+
+                        <hr class="my-4">
+
+                        <!-- أرقام الإنتاج -->
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold text-success">🥚 عدد الحصى الجديد</label>
+                                <input type="number" name="eggs_found" class="form-control" value="0" min="0">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold text-info">🐣 الزغاليل الفاقسة</label>
+                                <input type="number" name="squabs_hatched" class="form-control" value="0" min="0">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold text-danger">☠️ النافق (الميت)</label>
+                                <input type="number" name="deaths" class="form-control" value="0" min="0">
+                            </div>
+                        </div>
+
+                        <!-- تاريخ التراقد (خاص بالحصى الجديد فقط) -->
+                        <div class="mb-3 bg-light p-3 rounded border">
+                            <label class="form-label fw-bold text-dark">📅 تاريخ بداية التراقد / الحضن</label>
+                            <input type="date" name="incubation_start_date" class="form-control">
+                            <small class="text-muted d-block mt-1">
+                                💡 <strong>ملاحظة:</strong> يُحدد هذا التاريخ فقط في حالة تسجيل <strong>حصى جديد (بيض)</strong> لحساب موعد الفقس المتوقع تلقائياً. اتركه فارغاً إذا كنت تسجل زغاليل فاقسة أو نافق فقط.
+                            </small>
+                        </div>
+
+                        <!-- أزرار الإرسال والإلغاء -->
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-warning btn-lg fw-bold text-dark">حفظ سجل الإنتاج</button>
+                            <a href="{% url 'farm_home' %}" class="btn btn-outline-secondary">إلغاء وعودة</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}تفاصيل القص {{ pair.pair_code }} - مزرعتي{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- كارت تعريف القص -->
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col-md-3 text-center mb-3 mb-md-0">
+                    {% if pair.image %}
+                    <img src="{{ pair.image.url }}" class="img-fluid rounded shadow-sm" style="max-height: 180px; object-fit: cover;">
+                    {% else %}
+                    <div class="bg-light p-4 rounded text-muted">بدون صورة</div>
+                    {% endif %}
+                </div>
+                <div class="col-md-9">
+                    <h3 class="fw-bold mb-2">كود القص: <span class="text-primary">{{ pair.pair_code }}</span></h3>
+                    <p class="fs-5 mb-1"><strong>السلالة:</strong> {{ pair.breed|default:"غير محددة" }}</p>
+                    <p class="fs-5 mb-0"><strong>المكان:</strong> {{ pair.loft_or_room.name }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- إحصائيات إنتاج القص -->
+    <div class="row mb-4">
+        <div class="col-md-3 mb-2"><div class="card bg-success text-white text-center p-3 border-0"><h6>إجمالي الحصى</h6><h3>{{ total_eggs }}</h3></div></div>
+        <div class="col-md-3 mb-2"><div class="card bg-info text-white text-center p-3 border-0"><h6>الزغاليل الفاقسة</h6><h3>{{ total_squabs }}</h3></div></div>
+        <div class="col-md-3 mb-2"><div class="card bg-danger text-white text-center p-3 border-0"><h6>النافق</h6><h3>{{ total_deaths }}</h3></div></div>
+        <div class="col-md-3 mb-2"><div class="card bg-primary text-white text-center p-3 border-0"><h6>إجمالي أرباحه</h6><h3>{{ pair_sales_total }} ج.م</h3></div></div>
+    </div>
+
+    <!-- سجل إنتاج القص -->
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-dark text-white fw-bold">📊 آخر سجلات الإنتاج للقص</div>
+        <div class="card-body p-0 table-responsive">
+            <table class="table table-hover text-center m-0 align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>التاريخ</th>
+                        <th>الحصى</th>
+                        <th>الفقس</th>
+                        <th>النافق</th>
+                        <th>تاريخ بدء الحضن</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for rec in recent_records %}
+                    <tr>
+                        <td>{{ rec.record_date|date:"Y-m-d" }}</td>
+                        <td><span class="badge bg-success fs-6">{{ rec.eggs_found }}</span></td>
+                        <td><span class="badge bg-info fs-6">{{ rec.squabs_hatched }}</span></td>
+                        <td><span class="badge bg-danger fs-6">{{ rec.deaths }}</span></td>
+                        <td>{{ rec.incubation_start_date|default:"-" }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="5" class="text-muted p-3">لا توجد سجلات إنتاج سابقة لهذا القص.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

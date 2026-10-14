@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %}إضافة قص جديد - مزرعتي{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-primary text-white text-center py-3">
+                    <h5 class="card-title fw-bold m-0">➕ إضافة قص جديد</h5>
+                </div>
+                <div class="card-body p-4">
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        <!-- اختيار الغرفة -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">اختر الغرفة / الغية <span class="text-danger">*</span></label>
+                            <select name="room" class="form-select" required>
+                                <option value="">-- اختر الغرفة --</option>
+                                {% for room in rooms %}
+                                    <option value="{{ room.id }}">{{ room.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <!-- الرقم التعريفي -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">رقم العين / كود القص <span class="text-danger">*</span></label>
+                            <input type="text" name="pair_code" class="form-control" placeholder="مثال: عين 102 أو كود P12" required>
+                        </div>
+
+                        <!-- السلالة -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">النوع / السلالة</label>
+                            <input type="text" name="breed" class="form-control" placeholder="مثال: زاجل، كشك، شيخالي...">
+                        </div>
+
+                        <!-- صورة القص -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">صورة القص (اختياري)</label>
+                            <input type="file" name="image" class="form-control" accept="image/*">
+                        </div>
+
+                        <!-- أزرار الإرسال والإلغاء -->
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg fw-bold">حفظ بيانات القص</button>
+                            <a href="{% url 'farm_home' %}" class="btn btn-outline-secondary">إلغاء وعودة</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

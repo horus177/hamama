@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+
+{% block title %}سجل المصروفات - مزرعتي{% endblock %}
+
+{% block content %}
+<!-- تنسيقات خاصة بالطباعة للتحكم في الشكل عند إرسال الملف للطابعة -->
+<style>
+    @media print {
+        /* إخفاء الأزرار وشريط التصفح عند الطباعة */
+        .no-print, nav, footer, .btn, .card-header button {
+            display: none !important;
+        }
+        body {
+            background-color: #fff !important;
+            color: #000 !important;
+        }
+        .container {
+            max-width: 100% !important;
+            width: 100% !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+        .card {
+            border: none !important;
+            box-shadow: none !important;
+        }
+        .table {
+            border: 1px solid #000 !important;
+        }
+        .table th, .table td {
+            border: 1px solid #ddd !important;
+        }
+    }
+</style>
+
+<div class="container py-4">
+    <!-- الهيدر وأزرار التحكم -->
+    <div class="d-flex justify-content-between align-items-center mb-4 no-print">
+        <div>
+            <h3 class="fw-bold text-danger mb-1">📉 سجل المصروفات والنفقات</h3>
+            <p class="text-muted m-0">عرض وتتبع جميع المبالغ المصروفة على المزرعة (أعلاف، أدوية، مستلزمات)</p>
+        </div>
+        <div class="d-flex gap-2">
+            <!-- زر الطباعة برسمة طابعة -->
+            <button onclick="window.print();" class="btn btn-dark fw-bold px-3">
+                🖨️ طباعة التقرير
+            </button>
+            <a href="{% url 'add_expense' %}" class="btn btn-danger fw-bold">
+                ➕ إضافة مصروف جديد
+            </a>
+            <a href="{% url 'farm_home' %}" class="btn btn-outline-secondary">
+                ⬅ العودة للوحة التحكم
+            </a>
+        </div>
+    </div>
+
+    <!-- كارت الإجمالي -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card border-danger bg-light text-center p-3 shadow-sm">
+                <h6 class="text-danger fw-bold mb-1">إجمالي المصروفات الكلية:</h6>
+                <h3 class="fw-bold text-danger m-0">{{ total_expenses }} ج.م</h3>
+            </div>
+        </div>
+    </div>
+
+    <!-- جدول المصروفات -->
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-danger text-white fw-bold d-flex justify-content-between align-items-center">
+            <span>📋 تفاصيل العمليات</span>
+            <span class="badge bg-light text-danger">عدد العمليات: {{ expenses.count }}</span>
+        </div>
+        <div class="card-body p-0 table-responsive">
+            <table class="table table-hover text-center align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>#</th>
+                        <th>تاريخ الصرف</th>
+                        <th>بيان المصروف / البند</th>
+                        <th>المبلغ</th>
+                        <th>ملاحظات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for expense in expenses %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <!-- دعم تاريخ الصرف بناءً على اسم الحقل لديك -->
+                        <td>{{ expense.expense_date|date:"Y-m-d" }}</td>
+                        <td class="fw-bold">{{ expense.title }}</td>
+                        <td class="fw-bold text-danger fs-6">{{ expense.amount }} ج.م</td>
+                        <td class="text-muted">{{ expense.notes|default:"-" }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-muted p-4">لا توجد عمليات مصروفات مسجلة حتى الآن.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

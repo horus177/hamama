@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block title %}سجل النفوق - مزرعتي{% endblock %}
+
+{% block content %}
+<!-- تنسيقات خاصة بالطباعة للتحكم في شكل الصفحة عند إرسال التقرير للطابعة -->
+<style>
+    @media print {
+        /* إخفاء الأزرار وشريط التصفح عند الطباعة */
+        .no-print, nav, footer, .btn {
+            display: none !important;
+        }
+        body {
+            background-color: #fff !important;
+            color: #000 !important;
+        }
+        .container {
+            max-width: 100% !important;
+            width: 100% !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+        .card {
+            border: none !important;
+            box-shadow: none !important;
+        }
+        .table {
+            border: 1px solid #000 !important;
+            width: 100% !important;
+        }
+        .table th, .table td {
+            border: 1px solid #ddd !important;
+        }
+    }
+</style>
+
+<div class="container py-4">
+    <!-- Header وأزرار التحكم -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="fw-bold text-danger mb-0"><i class="bi bi-x-circle-fill"></i> سجل عمليات النفوق وتلف البيض</h3>
+        <div class="d-flex gap-2 no-print">
+            <!-- زر الطباعة -->
+            <button onclick="window.print();" class="btn btn-dark fw-bold px-3">
+                🖨️ طباعة التقرير
+            </button>
+            <a href="{% url 'farm_home' %}" class="btn btn-secondary fw-bold">⬅ العودة للوحة التحكم</a>
+        </div>
+    </div>
+
+    <!-- جدول النفوق -->
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-0 table-responsive">
+            <table class="table table-hover text-center align-middle mb-0">
+                <thead class="table-danger">
+                    <tr>
+                        <th>التاريخ / التحديث</th>
+                        <th>القص / الغرفة</th>
+                        <th>عدد النافق (حصى / زغاليل)</th>
+                        <th>التفاصيل والملاحظات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for death in deaths %}
+                    <tr>
+                        <td>{{ death.record_date|date:"Y-m-d" }}</td>
+                        <td class="fw-bold">{{ death.pigeon_pair.pair_code|default:death.loft_or_room.name }}</td>
+                        <td><span class="badge bg-danger fs-6">{{ death.deaths }}</span></td>
+                        <td class="text-muted">
+                            {% if death.eggs_found == 0 and death.squabs_hatched == 0 %}
+                                تلف/كبس بيض قبل الفقس
+                            {% else %}
+                                {{ death.notes|default:"تسجيل نفوق أثناء المتابعة" }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="4" class="text-muted p-4">لا توجد سجلات نفوق مسجلة حتى الآن.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

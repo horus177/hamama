@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+
+{% block title %}سجل وأرشيف مواعيد الفقس - مزرعتي{% endblock %}
+
+{% block content %}
+<!-- تنسيقات خاصة بالطباعة للتحكم في الشكل عند إرسال التقرير للطابعة -->
+<style>
+    @media print {
+        /* إخفاء الأزرار وشريط التصفح عند الطباعة */
+        .no-print, nav, footer, .btn {
+            display: none !important;
+        }
+        body {
+            background-color: #fff !important;
+            color: #000 !important;
+        }
+        .container {
+            max-width: 100% !important;
+            width: 100% !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+        .card {
+            border: none !important;
+            box-shadow: none !important;
+        }
+        .table {
+            border: 1px solid #000 !important;
+            width: 100% !important;
+        }
+        .table th, .table td {
+            border: 1px solid #ddd !important;
+        }
+    }
+</style>
+
+<div class="container py-4">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h3 class="fw-bold mb-1">📜 أرشيف وسجل دورات التحضين والفقس</h3>
+            <p class="text-muted m-0">سجل تاريخي كامل لجميع عمليات التراقد ومواعيد الفقس السابقة والحالية</p>
+        </div>
+        <div class="d-flex gap-2 no-print">
+            <!-- زر الطباعة -->
+            <button onclick="window.print();" class="btn btn-dark fw-bold px-3">
+                🖨️ طباعة التقرير
+            </button>
+            <a href="{% url 'farm_home' %}" class="btn btn-outline-secondary">
+                ⬅ العودة للوحة التحكم
+            </a>
+        </div>
+    </div>
+
+    <!-- Table Card -->
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-0">
+            {% if incubation_records %}
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0 text-center">
+                    <thead class="table-light">
+                        <tr>
+                            <th>#</th>
+                            <th>العين / المكان / القص</th>
+                            <th>عدد الحصى</th>
+                            <th>تاريخ بداية التراقد</th>
+                            <th>تاريخ الفقس المتوقع</th>
+                            <th>الحالة</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for record in incubation_records %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>
+                                {% if record.pigeon_pair %}
+                                    <span class="badge bg-primary fs-6">قص: {{ record.pigeon_pair.pair_code }}</span>
+                                    {% if record.pigeon_pair.breed %}
+                                        <small class="text-muted">({{ record.pigeon_pair.breed }})</small>
+                                    {% endif %}
+                                {% else %}
+                                    <span class="badge bg-secondary fs-6">غرفة: {{ record.loft_or_room.name }}</span>
+                                {% endif %}
+                            </td>
+                            <td><span class="fw-bold text-success">{{ record.eggs_found }}</span> حصى</td>
+                            <td>{{ record.incubation_start_date|date:"Y-m-d" }}</td>
+                            <td>
+                                <strong>{{ record.expected_hatch_date|date:"Y-m-d"|default:"غير محدد" }}</strong>
+                            </td>
+                            <td>
+                                {% if record.expected_hatch_date %}
+                                    {% if record.expected_hatch_date < today %}
+                                        <span class="badge bg-secondary">سابق (مكتمَل)</span>
+                                    {% elif record.expected_hatch_date == today %}
+                                        <span class="badge bg-warning text-dark">🎯 موعد الفقس اليوم</span>
+                                    {% else %}
+                                        <span class="badge bg-info text-dark">⏳ قيد الحضن (جاري)</span>
+                                    {% endif %}
+                                {% else %}
+                                    <span class="badge bg-light text-dark">-</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center py-5">
+                <p class="text-muted fs-5 mb-0">لا توجد سجلات تراقد أو فقس مسجلة حتى الآن.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

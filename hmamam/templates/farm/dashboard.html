@@ -1,0 +1,254 @@
+{% extends 'base.html' %}
+
+{% block title %}لوحة التحكم والإدارة - مزرعتي{% endblock %}
+
+{% block content %}
+<!-- تنسيقات الأزرار المضيئة والتفاعلية وزر أقصاص الإنتاج العريض -->
+<style>
+    /* التأثير المضيء العام للأزرار */
+    .btn-glow {
+        transition: all 0.3s ease-in-out !important;
+        border: none !important;
+        font-weight: bold !important;
+    }
+    
+    .btn-glow:hover {
+        transform: translateY(-2px);
+    }
+
+    /* ألوان الإضاءة التكيفية لكل زر */
+    .btn-glow-warning {
+        background: linear-gradient(135deg, #ffc107, #ff9800) !important;
+        color: #212529 !important;
+        box-shadow: 0 0 10px rgba(255, 193, 7, 0.5);
+    }
+    .btn-glow-warning:hover {
+        box-shadow: 0 0 18px rgba(255, 193, 7, 0.85);
+    }
+
+    .btn-glow-primary {
+        background: linear-gradient(135deg, #0d6efd, #0b5ed7) !important;
+        color: #fff !important;
+        box-shadow: 0 0 10px rgba(13, 110, 253, 0.5);
+    }
+    .btn-glow-primary:hover {
+        box-shadow: 0 0 18px rgba(13, 110, 253, 0.85);
+    }
+
+    .btn-glow-secondary {
+        background: linear-gradient(135deg, #6c757d, #495057) !important;
+        color: #fff !important;
+        box-shadow: 0 0 10px rgba(108, 117, 125, 0.5);
+    }
+    .btn-glow-secondary:hover {
+        box-shadow: 0 0 18px rgba(108, 117, 125, 0.85);
+    }
+
+    .btn-glow-success {
+        background: linear-gradient(135deg, #198754, #146c43) !important;
+        color: #fff !important;
+        box-shadow: 0 0 10px rgba(25, 135, 84, 0.5);
+    }
+    .btn-glow-success:hover {
+        box-shadow: 0 0 18px rgba(25, 135, 84, 0.85);
+    }
+
+    .btn-glow-danger {
+        background: linear-gradient(135deg, #dc3545, #b02a37) !important;
+        color: #fff !important;
+        box-shadow: 0 0 10px rgba(220, 53, 69, 0.5);
+    }
+    .btn-glow-danger:hover {
+        box-shadow: 0 0 18px rgba(220, 53, 69, 0.85);
+    }
+
+    /* زر السهم المضيء العريض للذهاب إلى قسم أقصاص الإنتاج */
+    .btn-arrow-production {
+        background: linear-gradient(135deg, #0dcaf0, #0d6efd) !important;
+        color: #ffffff !important;
+        font-size: 1.1rem;
+        border-radius: 12px;
+        box-shadow: 0 0 15px rgba(13, 202, 240, 0.6);
+        transition: all 0.3s ease-in-out;
+        text-decoration: none;
+    }
+
+    .btn-arrow-production:hover {
+        background: linear-gradient(135deg, #0d6efd, #0bacbe) !important;
+        color: #ffffff !important;
+        transform: translateY(-3px);
+        box-shadow: 0 0 25px rgba(13, 202, 240, 0.95);
+    }
+
+    .btn-arrow-production .arrow-icon {
+        display: inline-block;
+        transition: transform 0.3s ease;
+    }
+
+    .btn-arrow-production:hover .arrow-icon {
+        transform: translateX(-6px);
+    }
+</style>
+
+<div class="container py-4">
+
+    <!-- تنبيه الحصى المتوقع فقسه اليوم -->
+    {% if hatches_due_today %}
+    <div class="alert alert-warning border-2 border-warning shadow-sm mb-4">
+        <h5 class="fw-bold text-dark mb-2">🚨 تنبيه هام: حان موعد الفقس اليوم!</h5>
+        <p class="mb-2">توجد سجلات إنتاج حان موعد فقسها اليوم أو قريبة جداً، يُرجى المتابعة والمعاينة:</p>
+        <ul class="mb-0">
+            {% for hatch in hatches_due_today %}
+            <li>
+                <strong>المكان/القص:</strong> {{ hatch.pigeon_pair.pair_code|default:hatch.loft_or_room.name }} 
+                - <strong>تاريخ بداية التراقد:</strong> {{ hatch.incubation_start_date|date:"Y-m-d" }}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    <!-- أزرار الوصول السريع للأقسام والإضافات -->
+    <div class="card mb-4 shadow-sm border-0">
+        <div class="card-body bg-white rounded">
+            <h6 class="fw-bold mb-3 text-secondary"><i class="bi bi-gear-fill"></i> الإجراءات السريعة:</h6>
+            
+            <!-- 1. الأزرار المضيئة العلويّة -->
+            <div class="d-flex flex-wrap gap-2 mb-3">
+                <a href="{% url 'add_production' %}" class="btn btn-glow btn-glow-warning">
+                    🪺 تسجيل إنتاج جديد
+                </a>
+                <a href="{% url 'add_pair' %}" class="btn btn-glow btn-glow-primary">
+                    ➕ إضافة قص جديد
+                </a>
+                <a href="{% url 'add_room' %}" class="btn btn-glow btn-glow-secondary">
+                    🏠 إضافة غرفة / غية
+                </a>
+                <a href="{% url 'add_sale' %}" class="btn btn-glow btn-glow-success">
+                    💰 تسجيل عملية بيع
+                </a>
+                <a href="{% url 'add_expense' %}" class="btn btn-glow btn-glow-danger">
+                    📉 تسجيل مصروفات
+                </a>
+            </div>
+
+            <hr class="my-3 text-muted opacity-25">
+
+            <!-- 2. زر السهم المضيء العريض بالأسفل للذهاب لقسم الإنتاج -->
+            <div>
+                <a href="{% url 'pairs_list' %}" class="btn btn-arrow-production w-100 py-2 fw-bold d-flex align-items-center justify-content-center gap-2">
+                    <span>🕊️ الذهاب إلى قسم أقصاص الإنتاج</span>
+                    <span class="arrow-icon fs-5">⬅</span>
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 1. شريط إحصائيات الإنتاج الحالية -->
+    <div class="row mb-4">
+        <div class="col-md-4 mb-2"><div class="card bg-success text-white text-center p-3 shadow-sm border-0"><h5>إجمالي الحصى</h5><h2>{{ total_eggs }}</h2></div></div>
+        <div class="col-md-4 mb-2"><div class="card bg-info text-white text-center p-3 shadow-sm border-0"><h5>إجمالي الزغاليل</h5><h2>{{ total_squabs }}</h2></div></div>
+        <div class="col-md-4 mb-2"><div class="card bg-danger text-white text-center p-3 shadow-sm border-0"><h5>إجمالي النفوق</h5><h2>{{ total_deaths }}</h2></div></div>
+    </div>
+
+    <!-- 2. الخزنة والأرباح والخسائر -->
+    <div class="row mb-4">
+        <div class="col-md-4 mb-2"><div class="card border-success text-center p-3 shadow-sm"><h5>إجمالي المبيعات</h5><h3 class="text-success">{{ total_sales }} ج.م</h3></div></div>
+        <div class="col-md-4 mb-2"><div class="card border-danger text-center p-3 shadow-sm"><h5>إجمالي المصاريف</h5><h3 class="text-danger">{{ total_expenses }} ج.م</h3></div></div>
+        <div class="col-md-4 mb-2">
+            <div class="card {% if net_profit >= 0 %}bg-success{% else %}bg-danger{% endif %} text-white text-center p-3 shadow-sm border-0">
+                <h5>صافي الأرباح</h5>
+                <h3>{{ net_profit }} ج.م</h3>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. قسم متابعة مواعيد الفقس المتوقعة وروابط السجلات -->
+    <div class="card mb-4 shadow-sm border-0">
+        <div class="card-header bg-warning text-dark fw-bold d-flex flex-wrap justify-content-between align-items-center gap-2">
+            <span>⏳ مواعيد الفقس القادمة والأيام المتبقية</span>
+            <div class="d-flex flex-wrap gap-2">
+                <!-- أزرار الوصول السريع لكافة السجلات -->
+                <a href="{% url 'sales_history' %}" class="btn btn-sm btn-success fw-bold">💰 سجل المبيعات</a>
+                <a href="{% url 'expenses_history' %}" class="btn btn-sm btn-secondary fw-bold">📉 سجل المصروفات</a>
+                <a href="{% url 'deaths_history' %}" class="btn btn-sm btn-danger fw-bold">💀 سجل النفوق</a>
+                <a href="{% url 'hatch_history' %}" class="btn btn-sm btn-dark fw-bold">📜 أرشيف الفقس</a>
+            </div>
+        </div>
+        <div class="card-body p-0 table-responsive">
+            <table class="table table-hover text-center m-0 align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>القص / الغرفة</th>
+                        <th>تاريخ البيض</th>
+                        <th>تاريخ الفقس المتوقع</th>
+                        <th>المتبقي</th>
+                        <th>الإجراء</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for record in upcoming_hatches %}
+                    <tr>
+                        <td class="fw-bold">{{ record.pigeon_pair.pair_code|default:record.loft_or_room.name }}</td>
+                        <td>{{ record.incubation_start_date|date:"Y-m-d" }}</td>
+                        <td>{{ record.expected_hatch_date|date:"Y-m-d" }}</td>
+                        <td><span class="badge bg-primary fs-6">{{ record.days_until_hatch }} يوم</span></td>
+                        <td>
+                            <form action="{% url 'mark_egg_as_dead' record.id %}" method="POST" class="d-inline" onsubmit="return confirm('هل أنت تأكد أن البيض تلف/باظ وتريد حذفه من المتابعة وتسجيله في سجل النفوق؟');">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-outline-danger fw-bold">
+                                    💀 نافق
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="5" class="text-muted p-3">لا توجد عمليات تحضين جارية حالياً.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- 4. عرض الأقصاص (يظهر فقط إذا كان اختيار المربي هو السلاكات) -->
+    {% if profile.farm_type == 'cages' %}
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="fw-bold m-0">🕊️ أقصاص السلاكات المسجلة</h4>
+        <div>
+            <a href="{% url 'pairs_list' %}" class="btn btn-sm btn-outline-info me-1">عرض الكل</a>
+            <a href="{% url 'add_pair' %}" class="btn btn-sm btn-outline-primary">+ قص جديد</a>
+        </div>
+    </div>
+
+    <div class="row">
+        {% for pair in pairs %}
+        <div class="col-6 col-md-3 mb-3">
+            <div class="card h-100 shadow-sm text-center border-0">
+                {% if pair.image %}
+                <img src="{{ pair.image.url }}" class="card-img-top" style="height: 150px; object-fit: cover;">
+                {% else %}
+                <div class="bg-light d-flex align-items-center justify-content-center" style="height: 150px;">
+                    <span class="text-muted">بدون صورة</span>
+                </div>
+                {% endif %}
+                <div class="card-body p-2">
+                    <h5 class="fw-bold mb-1">{{ pair.pair_code }}</h5>
+                    <p class="text-muted small m-0">{{ pair.breed|default:"غير محدد" }}</p>
+                    <small class="text-secondary">الغرفة: {{ pair.loft_or_room.name }}</small>
+                </div>
+                <div class="card-footer bg-transparent border-0 pb-2 d-flex gap-1">
+                    <a href="{% url 'pair_detail' pair.id %}" class="btn btn-sm btn-primary flex-grow-1">التفاصيل 📊</a>
+                    <a href="{% url 'edit_pair' pair.id %}" class="btn btn-sm btn-outline-warning" title="تعديل القص أو تبديل فرد">✏️</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info text-center">لا توجد أقصاص مسجلة حالياً. قم بإضافة قصص جديدة للبدء.</div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}

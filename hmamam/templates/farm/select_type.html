@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}اختر نظام التربية - مزرعتي{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <h2 class="fw-bold mb-3">مرحباً بك! اختر نظام التربية المتبع لديك</h2>
+            <p class="text-muted mb-5">يمكنك تغيير هذا الخيار لاحقاً من إعدادات حسابك</p>
+
+            <form method="POST">
+                {% csrf_token %}
+                <div class="row g-4">
+                    <!-- خيار السلاكات -->
+                    <div class="col-md-6">
+                        <div class="card h-100 shadow-sm border-2">
+                            <div class="card-body p-4 text-center">
+                                <div class="fs-1 text-primary mb-3"><i class="bi bi-grid-3x3"></i></div>
+                                <h4 class="fw-bold">تربية سلاكات / عيون</h4>
+                                <p class="text-muted small">تخصيص كل قص رقم عين مستقل ومتابعة إنتاجه وسلالته منفصلاً.</p>
+                                <input type="radio" class="btn-check" name="farm_type" id="cages" value="cages" autocomplete="off" required>
+                                <label class="btn btn-outline-primary w-100 fw-bold mt-3" for="cages">اختيار نظام السلاكات</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- خيار السائب / الغرف -->
+                    <div class="col-md-6">
+                        <div class="card h-100 shadow-sm border-2">
+                            <div class="card-body p-4 text-center">
+                                <div class="fs-1 text-success mb-3"><i class="bi bi-house-door-fill"></i></div>
+                                <h4 class="fw-bold">تربية جماعية / غرف</h4>
+                                <p class="text-muted small">متابعة الإنتاج الكلي لكل غية أو غرفة حمام بدون تقسيم للعيون.</p>
+                                <input type="radio" class="btn-check" name="farm_type" id="loft" value="loft" autocomplete="off" required>
+                                <label class="btn btn-outline-success w-100 fw-bold mt-3" for="loft">اختيار نظام الغرف</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-5">
+                    <button type="submit" class="btn btn-dark btn-lg px-5 fw-bold">حفظ والمتابعة للوحة التحكم ⬅</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
