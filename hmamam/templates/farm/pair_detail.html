@@ -3,41 +3,61 @@
 {% block title %}تفاصيل القص {{ pair.pair_code }} - مزرعتي{% endblock %}
 
 {% block content %}
-<div class="container py-4">
+<div class="container py-3 py-md-4">
     <!-- كارت تعريف القص -->
-    <div class="card shadow-sm border-0 mb-4">
-        <div class="card-body">
+    <div class="card shadow-sm border-0 mb-3 mb-md-4 rounded-3">
+        <div class="card-body p-3 p-md-4">
             <div class="row align-items-center">
-                <div class="col-md-3 text-center mb-3 mb-md-0">
+                <div class="col-12 col-md-3 text-center mb-3 mb-md-0">
                     {% if pair.image %}
-                    <img src="{{ pair.image.url }}" class="img-fluid rounded shadow-sm" style="max-height: 180px; object-fit: cover;">
+                    <img src="{{ pair.image.url }}" class="img-fluid rounded-3 shadow-sm" style="max-height: 180px; width: 100%; object-fit: cover;">
                     {% else %}
-                    <div class="bg-light p-4 rounded text-muted">بدون صورة</div>
+                    <div class="bg-light p-4 rounded-3 text-muted fs-7">بدون صورة</div>
                     {% endif %}
                 </div>
-                <div class="col-md-9">
-                    <h3 class="fw-bold mb-2">كود القص: <span class="text-primary">{{ pair.pair_code }}</span></h3>
-                    <p class="fs-5 mb-1"><strong>السلالة:</strong> {{ pair.breed|default:"غير محددة" }}</p>
-                    <p class="fs-5 mb-0"><strong>المكان:</strong> {{ pair.loft_or_room.name }}</p>
+                <div class="col-12 col-md-9 text-center text-md-start">
+                    <h4 class="fw-bold mb-2 fs-5 fs-md-3">كود القص: <span class="text-primary">{{ pair.pair_code }}</span></h4>
+                    <p class="fs-6 fs-md-5 mb-1"><strong>السلالة:</strong> {{ pair.breed|default:"غير محددة" }}</p>
+                    <p class="fs-6 fs-md-5 mb-0"><strong>المكان:</strong> {{ pair.loft_or_room.name }}</p>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- إحصائيات إنتاج القص -->
-    <div class="row mb-4">
-        <div class="col-md-3 mb-2"><div class="card bg-success text-white text-center p-3 border-0"><h6>إجمالي الحصى</h6><h3>{{ total_eggs }}</h3></div></div>
-        <div class="col-md-3 mb-2"><div class="card bg-info text-white text-center p-3 border-0"><h6>الزغاليل الفاقسة</h6><h3>{{ total_squabs }}</h3></div></div>
-        <div class="col-md-3 mb-2"><div class="card bg-danger text-white text-center p-3 border-0"><h6>النافق</h6><h3>{{ total_deaths }}</h3></div></div>
-        <div class="col-md-3 mb-2"><div class="card bg-primary text-white text-center p-3 border-0"><h6>إجمالي أرباحه</h6><h3>{{ pair_sales_total }} ج.م</h3></div></div>
+    <div class="row g-2 g-md-3 mb-3 mb-md-4">
+        <div class="col-6 col-md-3">
+            <div class="card bg-success text-white text-center p-2 p-md-3 border-0 rounded-3 shadow-sm">
+                <h6 class="fs-7 fs-md-6 mb-1">إجمالي الحصى</h6>
+                <h3 class="m-0 fs-5 fs-md-3 fw-bold">{{ total_eggs }}</h3>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card bg-info text-white text-center p-2 p-md-3 border-0 rounded-3 shadow-sm">
+                <h6 class="fs-7 fs-md-6 mb-1">الزغاليل الفاقسة</h6>
+                <h3 class="m-0 fs-5 fs-md-3 fw-bold">{{ total_squabs }}</h3>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card bg-danger text-white text-center p-2 p-md-3 border-0 rounded-3 shadow-sm">
+                <h6 class="fs-7 fs-md-6 mb-1">النافق</h6>
+                <h3 class="m-0 fs-5 fs-md-3 fw-bold">{{ total_deaths }}</h3>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card bg-primary text-white text-center p-2 p-md-3 border-0 rounded-3 shadow-sm">
+                <h6 class="fs-7 fs-md-6 mb-1">إجمالي أرباحه</h6>
+                <h3 class="m-0 fs-5 fs-md-3 fw-bold">{{ pair_sales_total }} <small class="fs-7">ج.م</small></h3>
+            </div>
+        </div>
     </div>
 
     <!-- سجل إنتاج القص -->
-    <div class="card shadow-sm border-0">
-        <div class="card-header bg-dark text-white fw-bold">📊 آخر سجلات الإنتاج للقص</div>
+    <div class="card shadow-sm border-0 rounded-3">
+        <div class="card-header bg-dark text-white fw-bold py-3 fs-6">📊 آخر سجلات الإنتاج للقص</div>
         <div class="card-body p-0 table-responsive">
             <table class="table table-hover text-center m-0 align-middle">
-                <thead class="table-light">
+                <thead class="table-light fs-7 fs-md-6">
                     <tr>
                         <th>التاريخ</th>
                         <th>الحصى</th>
@@ -46,13 +66,13 @@
                         <th>تاريخ بدء الحضن</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="fs-7 fs-md-6">
                     {% for rec in recent_records %}
                     <tr>
                         <td>{{ rec.record_date|date:"Y-m-d" }}</td>
-                        <td><span class="badge bg-success fs-6">{{ rec.eggs_found }}</span></td>
-                        <td><span class="badge bg-info fs-6">{{ rec.squabs_hatched }}</span></td>
-                        <td><span class="badge bg-danger fs-6">{{ rec.deaths }}</span></td>
+                        <td><span class="badge bg-success fs-7 fs-md-6">{{ rec.eggs_found }}</span></td>
+                        <td><span class="badge bg-info fs-7 fs-md-6">{{ rec.squabs_hatched }}</span></td>
+                        <td><span class="badge bg-danger fs-7 fs-md-6">{{ rec.deaths }}</span></td>
                         <td>{{ rec.incubation_start_date|default:"-" }}</td>
                     </tr>
                     {% empty %}

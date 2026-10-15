@@ -4,46 +4,46 @@
 
 {% block content %}
 <!-- Hero Section -->
-<section class="bg-gradient bg-dark text-white text-center py-5 shadow-sm">
-    <div class="container py-4">
-        <h1 class="display-4 fw-bold mb-3">🕊️ مرحباً بك في نظام "مزرعتي"</h1>
-        <p class="lead mb-4 col-md-8 mx-auto text-light">
+<section class="bg-gradient bg-dark text-white text-center py-4 py-md-5 shadow-sm">
+    <div class="container py-3 py-md-4">
+        <h1 class="display-5 display-md-4 fw-bold mb-3">🕊️ مرحباً بك في نظام "مزرعتي"</h1>
+        <p class="lead mb-4 col-12 col-md-8 mx-auto text-light fs-6 fs-md-5">
             المنصة الذكية الأولى لمربي الحمام لمتابعة إنتاج السلاكات والغرف، التذكير بمواعيد الفقس، وحساب أرباح ومصروفات المزرعة بدقة وسهولة.
         </p>
-        <div>
-            <a href="{% url 'register' %}" class="btn btn-success btn-lg fw-bold px-4 me-2 shadow">ابدأ الآن مجاناً</a>
-            <a href="{% url 'login' %}" class="btn btn-outline-light btn-lg px-4">تسجيل الدخول</a>
+        <div class="d-flex flex-column flex-sm-row justify-content-center gap-2 px-3">
+            <a href="{% url 'register' %}" class="btn btn-success btn-lg fw-bold px-4 shadow py-2 fs-6">ابدأ الآن مجاناً</a>
+            <a href="{% url 'login' %}" class="btn btn-outline-light btn-lg px-4 py-2 fs-6">تسجيل الدخول</a>
         </div>
     </div>
 </section>
 
 <!-- Features Section -->
-<section class="py-5">
+<section class="py-4 py-md-5">
     <div class="container">
-        <h2 class="text-center fw-bold mb-5">كل ما تحتاجه لإدارة مزرعتك في مكان واحد</h2>
+        <h2 class="text-center fw-bold mb-4 mb-md-5 fs-4 fs-md-2">كل ما تحتاجه لإدارة مزرعتك في مكان واحد</h2>
         
-        <div class="row g-4">
-            <div class="col-md-4 text-center">
-                <div class="card h-100 border-0 shadow-sm p-4">
+        <div class="row g-3 g-md-4">
+            <div class="col-12 col-md-4 text-center">
+                <div class="card h-100 border-0 shadow-sm p-3 p-md-4 rounded-3">
                     <div class="mb-3 fs-1 text-primary"><i class="bi bi-egg-fill"></i></div>
-                    <h4 class="fw-bold">متابعة الفقس والإنتاج</h4>
-                    <p class="text-muted">حساب تلقائي للأيام المتبقية على فقس الحصى وتنبيهك بمواعيد خروج الزغاليل.</p>
+                    <h5 class="fw-bold fs-5">متابعة الفقس والإنتاج</h5>
+                    <p class="text-muted fs-6 m-0">حساب تلقائي للأيام المتبقية على فقس الحصى وتنبيهك بمواعيد خروج الزغاليل.</p>
                 </div>
             </div>
 
-            <div class="col-md-4 text-center">
-                <div class="card h-100 border-0 shadow-sm p-4">
+            <div class="col-12 col-md-4 text-center">
+                <div class="card h-100 border-0 shadow-sm p-3 p-md-4 rounded-3">
                     <div class="mb-3 fs-1 text-success"><i class="bi bi-cash-stack"></i></div>
-                    <h4 class="fw-bold">الحسابات والمالية</h4>
-                    <p class="text-muted">سجل كل عملية بيع ومصروفات كلفة وعلاج، واعرف صافي أرباحك بضغطة زر.</p>
+                    <h5 class="fw-bold fs-5">الحسابات والمالية</h5>
+                    <p class="text-muted fs-6 m-0">سجل كل عملية بيع ومصروفات كلفة وعلاج، واعرف صافي أرباحك بضغطة زر.</p>
                 </div>
             </div>
 
-            <div class="col-md-4 text-center">
-                <div class="card h-100 border-0 shadow-sm p-4">
+            <div class="col-12 col-md-4 text-center">
+                <div class="card h-100 border-0 shadow-sm p-3 p-md-4 rounded-3">
                     <div class="mb-3 fs-1 text-warning"><i class="bi bi-grid-3x3-gap-fill"></i></div>
-                    <h4 class="fw-bold">تنظيم الأقصاص والغرف</h4>
-                    <p class="text-muted">إدارة كاملة لكل قص أو غرفة، مع حفظ السلالات والصور وسجل الإنتاج الخاص بهم.</p>
+                    <h5 class="fw-bold fs-5">تنظيم الأقصاص والغرف</h5>
+                    <p class="text-muted fs-6 m-0">إدارة كاملة لكل قص أو غرفة، مع حفظ السلالات والصور وسجل الإنتاج الخاص بهم.</p>
                 </div>
             </div>
         </div>
@@ -51,34 +51,46 @@
 </section>
 
 <!-- Gallery Section -->
-<section class="bg-white py-5">
+<section class="bg-white py-4 py-md-5">
     <div class="container">
-        <h2 class="text-center fw-bold mb-4">نظام يتكيف مع أسلوب تربيتك</h2>
-        <p class="text-center text-muted mb-5">سواء كنت تعتمد على تربية السلاكات أو الغرف الجماعية</p>
+        <h2 class="text-center fw-bold mb-2 fs-4 fs-md-2">نظام يتكيف مع أسلوب تربيتك</h2>
+        <p class="text-center text-muted mb-4 fs-6">سواء كنت تعتمد على تربية السلاكات أو الغرف الجماعية</p>
 
-        <div class="row g-4">
-            <div class="col-md-4">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSDHJQqWilRMZI0iJpOv6-iFsMiK1ei-BGSXP2KLpV2MdxeKGS3sQYTU0s&s" alt="حمام">
-                <h5 class="fw-bold text-center mt-3">إدارة السلالات والأقصاص</h5>
+        <div class="row g-3 g-md-4">
+            <div class="col-12 col-md-4 text-center">
+                <div class="card h-100 border-0 shadow-sm rounded-3 overflow-hidden">
+                    <Image src="image_agent_tag_8949300445496381253" alt="سلاكات وأقصاص تربية الحمام" caption="أقصاص السلاكات والمناير" />
+                    <div class="card-body p-3">
+                        <h5 class="fw-bold fs-6 m-0">إدارة السلالات والأقصاص</h5>
+                    </div>
+                </div>
             </div>
-            <div class="col-md-4">
-                <img src="data:image/jpeg;base64,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" alt="إنتاج زغاليل">
-                <h5 class="fw-bold text-center mt-3">متابعة الفقس والزغاليل</h5>
+            <div class="col-12 col-md-4 text-center">
+                <div class="card h-100 border-0 shadow-sm rounded-3 overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1552728089-57bdde30beb3?auto=format&fit=crop&w=600&q=80" class="img-fluid rounded-top" style="height: 220px; width: 100%; object-fit: cover;" alt="حمام وزغاليل">
+                    <div class="card-body p-3">
+                        <h5 class="fw-bold fs-6 m-0">متابعة الفقس والزغاليل</h5>
+                    </div>
+                </div>
             </div>
-            <div class="col-md-4">
-                <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=600&q=80" class="img-fluid rounded shadow-sm" style="height:250px; width:100%; object-fit:cover;" alt="إحصائيات">
-                <h5 class="fw-bold text-center mt-3">تقارير مالية بسيطة</h5>
+            <div class="col-12 col-md-4 text-center">
+                <div class="card h-100 border-0 shadow-sm rounded-3 overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=600&q=80" class="img-fluid rounded-top" style="height: 220px; width: 100%; object-fit: cover;" alt="إحصائيات وتقارير">
+                    <div class="card-body p-3">
+                        <h5 class="fw-bold fs-6 m-0">تقارير مالية بسيطة</h5>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </section>
 
 <!-- Call to Action -->
-<section class="bg-success text-white text-center py-5">
-    <div class="container">
-        <h2 class="fw-bold mb-3">جاهز لتطوير إدارة مزرعتك؟</h2>
-        <p class="fs-5 mb-4">أنشئ حسابك الآن وابدأ في تنظيم مزرعتك في دقائق.</p>
-        <a href="{% url 'register' %}" class="btn btn-light btn-lg text-success fw-bold px-5 shadow">سجل مجاناً الآن</a>
+<section class="bg-success text-white text-center py-4 py-md-5">
+    <div class="container py-2">
+        <h2 class="fw-bold mb-3 fs-4 fs-md-2">جاهز لتطوير إدارة مزرعتك؟</h2>
+        <p class="fs-6 fs-md-5 mb-4 opacity-90">أنشئ حسابك الآن وابدأ في تنظيم مزرعتك في دقائق.</p>
+        <a href="{% url 'register' %}" class="btn btn-light btn-lg text-success fw-bold px-4 px-md-5 shadow py-2 fs-6">سجل مجاناً الآن</a>
     </div>
 </section>
 {% endblock %}

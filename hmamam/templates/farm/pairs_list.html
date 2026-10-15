@@ -3,44 +3,44 @@
 {% block title %}قسم أقصاص الإنتاج - مزرعتي{% endblock %}
 
 {% block content %}
-<div class="container py-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
+<div class="container py-3 py-md-4">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3 mb-3 mb-md-4">
         <div>
-            <h3 class="fw-bold mb-1">🕊️ قسم أقصاص الإنتاج</h3>
-            <p class="text-muted m-0">عرض وإدارة كافة الأقصاص المسجلة في السلاكات والغرف</p>
+            <h4 class="fw-bold mb-1 fs-5 fs-md-3">🕊️ قسم أقصاص الإنتاج</h4>
+            <p class="text-muted m-0 fs-7 fs-md-6">عرض وإدارة كافة الأقصاص المسجلة في السلاكات والغرف</p>
         </div>
-        <a href="{% url 'add_pair' %}" class="btn btn-primary fw-bold">
+        <a href="{% url 'add_pair' %}" class="btn btn-primary fw-bold w-100 w-md-auto py-2 fs-6">
             ➕ إضافة قص جديد
         </a>
     </div>
 
-    <div class="row">
+    <div class="row g-2 g-md-3">
         {% for pair in pairs %}
-        <div class="col-6 col-md-3 mb-4">
-            <div class="card h-100 shadow-sm border-0 text-center">
+        <div class="col-6 col-md-3 mb-2 mb-md-3">
+            <div class="card h-100 shadow-sm border-0 text-center rounded-3">
                 {% if pair.image %}
-                <img src="{{ pair.image.url }}" class="card-img-top" style="height: 180px; object-fit: cover;">
+                <img src="{{ pair.image.url }}" class="card-img-top rounded-top-3" style="height: 130px; object-fit: cover;">
                 {% else %}
-                <div class="bg-light d-flex align-items-center justify-content-center" style="height: 180px;">
-                    <span class="text-muted">بدون صورة</span>
+                <div class="bg-light d-flex align-items-center justify-content-center rounded-top-3" style="height: 130px;">
+                    <span class="text-muted fs-7">بدون صورة</span>
                 </div>
                 {% endif %}
-                <div class="card-body p-3">
-                    <h5 class="fw-bold mb-1">{{ pair.pair_code }}</h5>
-                    <span class="badge bg-light text-dark border mb-2">{{ pair.breed|default:"غير محدد" }}</span>
-                    <p class="text-secondary small m-0">🏠 الغرفة: {{ pair.loft_or_room.name }}</p>
+                <div class="card-body p-2 p-md-3">
+                    <h6 class="fw-bold mb-1 fs-6 text-truncate">{{ pair.pair_code }}</h6>
+                    <span class="badge bg-light text-dark border mb-2 fs-7 text-truncate max-w-100">{{ pair.breed|default:"غير محدد" }}</span>
+                    <p class="text-secondary small m-0 fs-7 text-truncate">🏠 الغرفة: {{ pair.loft_or_room.name }}</p>
                 </div>
-                <div class="card-footer bg-transparent border-0 pb-3 d-flex gap-1">
-                    <a href="{% url 'pair_detail' pair.id %}" class="btn btn-sm btn-primary flex-grow-1">التفاصيل 📊</a>
-                    <a href="{% url 'edit_pair' pair.id %}" class="btn btn-sm btn-outline-warning" title="تعديل">✏️</a>
+                <div class="card-footer bg-transparent border-0 pb-2 pb-md-3 pt-0 d-flex gap-1">
+                    <a href="{% url 'pair_detail' pair.id %}" class="btn btn-sm btn-primary flex-grow-1 fs-7 py-1">التفاصيل 📊</a>
+                    <a href="{% url 'edit_pair' pair.id %}" class="btn btn-sm btn-outline-warning py-1 px-2 fs-7" title="تعديل">✏️</a>
                 </div>
             </div>
         </div>
         {% empty %}
         <div class="col-12">
-            <div class="text-center py-5 bg-white rounded shadow-sm">
-                <p class="text-muted fs-5 mb-3">لا توجد أقصاص مسجلة حالياً.</p>
-                <a href="{% url 'add_pair' %}" class="btn btn-primary fw-bold">+ إضافة أول قص</a>
+            <div class="text-center py-5 bg-white rounded-3 shadow-sm">
+                <p class="text-muted fs-6 mb-3">لا توجد أقصاص مسجلة حالياً.</p>
+                <a href="{% url 'add_pair' %}" class="btn btn-primary fw-bold py-2 px-4 fs-6">+ إضافة أول قص</a>
             </div>
         </div>
         {% endfor %}

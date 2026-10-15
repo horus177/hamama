@@ -3,27 +3,27 @@
 {% block title %}تسجيل مصروفات - مزرعتي{% endblock %}
 
 {% block content %}
-<div class="container py-5">
+<div class="container py-3 py-md-5">
     <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card shadow-sm border-0">
+        <div class="col-12 col-sm-10 col-md-8 col-lg-6">
+            <div class="card shadow-sm border-0 rounded-3">
                 <div class="card-header bg-danger text-white text-center py-3">
-                    <h5 class="card-title fw-bold m-0">📉 تسجيل مصاريف (كلفة / علاج / أدوات)</h5>
+                    <h5 class="card-title fw-bold m-0 fs-5">📉 تسجيل مصاريف (كلفة / علاج / أدوات)</h5>
                 </div>
-                <div class="card-body p-4">
+                <div class="card-body p-3 p-md-4">
                     <form method="POST">
                         {% csrf_token %}
                         <div class="mb-3">
                             <label class="form-label fw-bold">نوع المصروف <span class="text-danger">*</span></label>
-                            <input type="text" name="title" class="form-control" placeholder="مثال: شكارة كلفة، فيتامينات..." required>
+                            <input type="text" name="title" class="form-control form-control-lg fs-6" placeholder="مثال: شكارة كلفة، فيتامينات..." required>
                         </div>
                         <div class="mb-3">
                             <label class="form-label fw-bold">المبلغ (جنية) <span class="text-danger">*</span></label>
-                            <input type="number" step="0.01" name="amount" class="form-control" placeholder="0.00" required>
+                            <input type="number" step="0.01" name="amount" class="form-control form-control-lg fs-6" placeholder="0.00" required>
                         </div>
                         <div class="d-grid gap-2 mt-4">
-                            <button type="submit" class="btn btn-danger btn-lg fw-bold">حفظ المصروفات</button>
-                            <a href="{% url 'farm_home' %}" class="btn btn-outline-secondary">إلغاء وعودة</a>
+                            <button type="submit" class="btn btn-danger btn-lg fw-bold fs-6 py-2">حفظ المصروفات</button>
+                            <a href="{% url 'farm_home' %}" class="btn btn-outline-secondary py-2">إلغاء وعودة</a>
                         </div>
                     </form>
                 </div>

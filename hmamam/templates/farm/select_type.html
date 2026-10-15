@@ -3,44 +3,54 @@
 {% block title %}اختر نظام التربية - مزرعتي{% endblock %}
 
 {% block content %}
-<div class="container py-5">
+<div class="container py-3 py-md-5">
     <div class="row justify-content-center">
-        <div class="col-md-8 text-center">
-            <h2 class="fw-bold mb-3">مرحباً بك! اختر نظام التربية المتبع لديك</h2>
-            <p class="text-muted mb-5">يمكنك تغيير هذا الخيار لاحقاً من إعدادات حسابك</p>
+        <div class="col-12 col-sm-10 col-md-8 text-center">
+            <h3 class="fw-bold mb-2 fs-4 fs-md-2">مرحباً بك! اختر نظام التربية المتبع لديك</h3>
+            <p class="text-muted mb-4 fs-7 fs-md-6">يمكنك تغيير هذا الخيار لاحقاً من إعدادات حسابك</p>
 
             <form method="POST">
                 {% csrf_token %}
-                <div class="row g-4">
+                <div class="row g-3 g-md-4">
                     <!-- خيار السلاكات -->
-                    <div class="col-md-6">
-                        <div class="card h-100 shadow-sm border-2">
-                            <div class="card-body p-4 text-center">
-                                <div class="fs-1 text-primary mb-3"><i class="bi bi-grid-3x3"></i></div>
-                                <h4 class="fw-bold">تربية سلاكات / عيون</h4>
-                                <p class="text-muted small">تخصيص كل قص رقم عين مستقل ومتابعة إنتاجه وسلالته منفصلاً.</p>
-                                <input type="radio" class="btn-check" name="farm_type" id="cages" value="cages" autocomplete="off" required>
-                                <label class="btn btn-outline-primary w-100 fw-bold mt-3" for="cages">اختيار نظام السلاكات</label>
+                    <div class="col-12 col-md-6">
+                        <div class="card h-100 shadow-sm border-2 rounded-3">
+                            <div class="card-body p-3 p-md-4 text-center d-flex flex-column justify-content-between">
+                                <div>
+                                    <div class="fs-1 text-primary mb-2 mb-md-3"><i class="bi bi-grid-3x3"></i></div>
+                                    <h4 class="fw-bold fs-5 fs-md-4">تربية سلاكات / عيون</h4>
+                                    <p class="text-muted small fs-7 fs-md-6">تخصيص كل قص رقم عين مستقل ومتابعة إنتاجه وسلالته منفصلاً.</p>
+                                </div>
+                                <div class="mt-3">
+                                    <input type="radio" class="btn-check" name="farm_type" id="cages" value="cages" autocomplete="off" required>
+                                    <label class="btn btn-outline-primary w-100 fw-bold py-2 fs-6" for="cages">اختيار نظام السلاكات</label>
+                                </div>
                             </div>
                         </div>
                     </div>
 
                     <!-- خيار السائب / الغرف -->
-                    <div class="col-md-6">
-                        <div class="card h-100 shadow-sm border-2">
-                            <div class="card-body p-4 text-center">
-                                <div class="fs-1 text-success mb-3"><i class="bi bi-house-door-fill"></i></div>
-                                <h4 class="fw-bold">تربية جماعية / غرف</h4>
-                                <p class="text-muted small">متابعة الإنتاج الكلي لكل غية أو غرفة حمام بدون تقسيم للعيون.</p>
-                                <input type="radio" class="btn-check" name="farm_type" id="loft" value="loft" autocomplete="off" required>
-                                <label class="btn btn-outline-success w-100 fw-bold mt-3" for="loft">اختيار نظام الغرف</label>
+                    <div class="col-12 col-md-6">
+                        <div class="card h-100 shadow-sm border-2 rounded-3">
+                            <div class="card-body p-3 p-md-4 text-center d-flex flex-column justify-content-between">
+                                <div>
+                                    <div class="fs-1 text-success mb-2 mb-md-3"><i class="bi bi-house-door-fill"></i></div>
+                                    <h4 class="fw-bold fs-5 fs-md-4">تربية جماعية / غرف</h4>
+                                    <p class="text-muted small fs-7 fs-md-6">متابعة الإنتاج الكلي لكل غية أو غرفة حمام بدون تقسيم للعيون.</p>
+                                </div>
+                                <div class="mt-3">
+                                    <input type="radio" class="btn-check" name="farm_type" id="loft" value="loft" autocomplete="off" required>
+                                    <label class="btn btn-outline-success w-100 fw-bold py-2 fs-6" for="loft">اختيار نظام الغرف</label>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="mt-5">
-                    <button type="submit" class="btn btn-dark btn-lg px-5 fw-bold">حفظ والمتابعة للوحة التحكم ⬅</button>
+                <div class="mt-4 mt-md-5">
+                    <button type="submit" class="btn btn-dark btn-lg w-100 w-md-auto px-md-5 fw-bold py-2 fs-6">
+                        حفظ والمتابعة للوحة التحكم ⬅
+                    </button>
                 </div>
             </form>
         </div>

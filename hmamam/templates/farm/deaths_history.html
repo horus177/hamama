@@ -34,24 +34,26 @@
     }
 </style>
 
-<div class="container py-4">
+<div class="container py-3 py-md-4">
     <!-- Header وأزرار التحكم -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h3 class="fw-bold text-danger mb-0"><i class="bi bi-x-circle-fill"></i> سجل عمليات النفوق وتلف البيض</h3>
-        <div class="d-flex gap-2 no-print">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3 mb-3 mb-md-4">
+        <h4 class="fw-bold text-danger mb-0 fs-5 fs-md-4">
+            <i class="bi bi-x-circle-fill"></i> سجل عمليات النفوق وتلف البيض
+        </h4>
+        <div class="d-flex gap-2 w-100 w-md-auto no-print">
             <!-- زر الطباعة -->
-            <button onclick="window.print();" class="btn btn-dark fw-bold px-3">
+            <button onclick="window.print();" class="btn btn-dark fw-bold px-3 flex-grow-1 flex-md-grow-0 fs-7 fs-md-6 py-2">
                 🖨️ طباعة التقرير
             </button>
-            <a href="{% url 'farm_home' %}" class="btn btn-secondary fw-bold">⬅ العودة للوحة التحكم</a>
+            <a href="{% url 'farm_home' %}" class="btn btn-secondary fw-bold flex-grow-1 flex-md-grow-0 fs-7 fs-md-6 py-2">⬅ العودة للوحة التحكم</a>
         </div>
     </div>
 
     <!-- جدول النفوق -->
-    <div class="card shadow-sm border-0">
+    <div class="card shadow-sm border-0 rounded-3">
         <div class="card-body p-0 table-responsive">
             <table class="table table-hover text-center align-middle mb-0">
-                <thead class="table-danger">
+                <thead class="table-danger fs-7 fs-md-6">
                     <tr>
                         <th>التاريخ / التحديث</th>
                         <th>القص / الغرفة</th>
@@ -59,12 +61,12 @@
                         <th>التفاصيل والملاحظات</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="fs-7 fs-md-6">
                     {% for death in deaths %}
                     <tr>
                         <td>{{ death.record_date|date:"Y-m-d" }}</td>
                         <td class="fw-bold">{{ death.pigeon_pair.pair_code|default:death.loft_or_room.name }}</td>
-                        <td><span class="badge bg-danger fs-6">{{ death.deaths }}</span></td>
+                        <td><span class="badge bg-danger fs-7 fs-md-6">{{ death.deaths }}</span></td>
                         <td class="text-muted">
                             {% if death.eggs_found == 0 and death.squabs_hatched == 0 %}
                                 تلف/كبس بيض قبل الفقس

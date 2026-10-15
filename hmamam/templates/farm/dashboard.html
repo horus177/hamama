@@ -66,7 +66,7 @@
     .btn-arrow-production {
         background: linear-gradient(135deg, #0dcaf0, #0d6efd) !important;
         color: #ffffff !important;
-        font-size: 1.1rem;
+        font-size: 1rem;
         border-radius: 12px;
         box-shadow: 0 0 15px rgba(13, 202, 240, 0.6);
         transition: all 0.3s ease-in-out;
@@ -90,14 +90,14 @@
     }
 </style>
 
-<div class="container py-4">
+<div class="container py-3 py-md-4">
 
     <!-- تنبيه الحصى المتوقع فقسه اليوم -->
     {% if hatches_due_today %}
-    <div class="alert alert-warning border-2 border-warning shadow-sm mb-4">
-        <h5 class="fw-bold text-dark mb-2">🚨 تنبيه هام: حان موعد الفقس اليوم!</h5>
-        <p class="mb-2">توجد سجلات إنتاج حان موعد فقسها اليوم أو قريبة جداً، يُرجى المتابعة والمعاينة:</p>
-        <ul class="mb-0">
+    <div class="alert alert-warning border-2 border-warning shadow-sm mb-3 mb-md-4">
+        <h5 class="fw-bold text-dark mb-2 fs-6 fs-md-5">🚨 تنبيه هام: حان موعد الفقس اليوم!</h5>
+        <p class="mb-2 small">توجد سجلات إنتاج حان موعد فقسها اليوم أو قريبة جداً، يُرجى المتابعة والمعاينة:</p>
+        <ul class="mb-0 small">
             {% for hatch in hatches_due_today %}
             <li>
                 <strong>المكان/القص:</strong> {{ hatch.pigeon_pair.pair_code|default:hatch.loft_or_room.name }} 
@@ -109,25 +109,25 @@
     {% endif %}
 
     <!-- أزرار الوصول السريع للأقسام والإضافات -->
-    <div class="card mb-4 shadow-sm border-0">
-        <div class="card-body bg-white rounded">
-            <h6 class="fw-bold mb-3 text-secondary"><i class="bi bi-gear-fill"></i> الإجراءات السريعة:</h6>
+    <div class="card mb-3 mb-md-4 shadow-sm border-0 rounded-3">
+        <div class="card-body bg-white rounded p-3 p-md-4">
+            <h6 class="fw-bold mb-3 text-secondary fs-6"><i class="bi bi-gear-fill"></i> الإجراءات السريعة:</h6>
             
-            <!-- 1. الأزرار المضيئة العلويّة -->
+            <!-- 1. الأزرار المضيئة العلويّة متكيفة مع شاشات الجوال -->
             <div class="d-flex flex-wrap gap-2 mb-3">
-                <a href="{% url 'add_production' %}" class="btn btn-glow btn-glow-warning">
+                <a href="{% url 'add_production' %}" class="btn btn-glow btn-glow-warning flex-grow-1 flex-md-grow-0 py-2 fs-7 fs-md-6">
                     🪺 تسجيل إنتاج جديد
                 </a>
-                <a href="{% url 'add_pair' %}" class="btn btn-glow btn-glow-primary">
+                <a href="{% url 'add_pair' %}" class="btn btn-glow btn-glow-primary flex-grow-1 flex-md-grow-0 py-2 fs-7 fs-md-6">
                     ➕ إضافة قص جديد
                 </a>
-                <a href="{% url 'add_room' %}" class="btn btn-glow btn-glow-secondary">
+                <a href="{% url 'add_room' %}" class="btn btn-glow btn-glow-secondary flex-grow-1 flex-md-grow-0 py-2 fs-7 fs-md-6">
                     🏠 إضافة غرفة / غية
                 </a>
-                <a href="{% url 'add_sale' %}" class="btn btn-glow btn-glow-success">
+                <a href="{% url 'add_sale' %}" class="btn btn-glow btn-glow-success flex-grow-1 flex-md-grow-0 py-2 fs-7 fs-md-6">
                     💰 تسجيل عملية بيع
                 </a>
-                <a href="{% url 'add_expense' %}" class="btn btn-glow btn-glow-danger">
+                <a href="{% url 'add_expense' %}" class="btn btn-glow btn-glow-danger flex-grow-1 flex-md-grow-0 py-2 fs-7 fs-md-6">
                     📉 تسجيل مصروفات
                 </a>
             </div>
@@ -145,40 +145,40 @@
     </div>
     
     <!-- 1. شريط إحصائيات الإنتاج الحالية -->
-    <div class="row mb-4">
-        <div class="col-md-4 mb-2"><div class="card bg-success text-white text-center p-3 shadow-sm border-0"><h5>إجمالي الحصى</h5><h2>{{ total_eggs }}</h2></div></div>
-        <div class="col-md-4 mb-2"><div class="card bg-info text-white text-center p-3 shadow-sm border-0"><h5>إجمالي الزغاليل</h5><h2>{{ total_squabs }}</h2></div></div>
-        <div class="col-md-4 mb-2"><div class="card bg-danger text-white text-center p-3 shadow-sm border-0"><h5>إجمالي النفوق</h5><h2>{{ total_deaths }}</h2></div></div>
+    <div class="row g-2 g-md-3 mb-3 mb-md-4">
+        <div class="col-4 col-md-4"><div class="card bg-success text-white text-center p-2 p-md-3 shadow-sm border-0 rounded-3"><h6 class="fs-7 fs-md-6 mb-1">إجمالي الحصى</h6><h3 class="m-0 fs-5 fs-md-2 fw-bold">{{ total_eggs }}</h3></div></div>
+        <div class="col-4 col-md-4"><div class="card bg-info text-white text-center p-2 p-md-3 shadow-sm border-0 rounded-3"><h6 class="fs-7 fs-md-6 mb-1">إجمالي الزغاليل</h6><h3 class="m-0 fs-5 fs-md-2 fw-bold">{{ total_squabs }}</h3></div></div>
+        <div class="col-4 col-md-4"><div class="card bg-danger text-white text-center p-2 p-md-3 shadow-sm border-0 rounded-3"><h6 class="fs-7 fs-md-6 mb-1">إجمالي النفوق</h6><h3 class="m-0 fs-5 fs-md-2 fw-bold">{{ total_deaths }}</h3></div></div>
     </div>
 
     <!-- 2. الخزنة والأرباح والخسائر -->
-    <div class="row mb-4">
-        <div class="col-md-4 mb-2"><div class="card border-success text-center p-3 shadow-sm"><h5>إجمالي المبيعات</h5><h3 class="text-success">{{ total_sales }} ج.م</h3></div></div>
-        <div class="col-md-4 mb-2"><div class="card border-danger text-center p-3 shadow-sm"><h5>إجمالي المصاريف</h5><h3 class="text-danger">{{ total_expenses }} ج.م</h3></div></div>
-        <div class="col-md-4 mb-2">
-            <div class="card {% if net_profit >= 0 %}bg-success{% else %}bg-danger{% endif %} text-white text-center p-3 shadow-sm border-0">
-                <h5>صافي الأرباح</h5>
-                <h3>{{ net_profit }} ج.م</h3>
+    <div class="row g-2 g-md-3 mb-3 mb-md-4">
+        <div class="col-4 col-md-4"><div class="card border-success text-center p-2 p-md-3 shadow-sm rounded-3"><h6 class="fs-7 fs-md-6 mb-1 text-muted">إجمالي المبيعات</h6><h4 class="text-success m-0 fs-6 fs-md-3 fw-bold">{{ total_sales }} <small class="fs-7">ج.م</small></h4></div></div>
+        <div class="col-4 col-md-4"><div class="card border-danger text-center p-2 p-md-3 shadow-sm rounded-3"><h6 class="fs-7 fs-md-6 mb-1 text-muted">إجمالي المصاريف</h6><h4 class="text-danger m-0 fs-6 fs-md-3 fw-bold">{{ total_expenses }} <small class="fs-7">ج.م</small></h4></div></div>
+        <div class="col-4 col-md-4">
+            <div class="card {% if net_profit >= 0 %}bg-success{% else %}bg-danger{% endif %} text-white text-center p-2 p-md-3 shadow-sm border-0 rounded-3">
+                <h6 class="fs-7 fs-md-6 mb-1">صافي الأرباح</h6>
+                <h4 class="m-0 fs-6 fs-md-3 fw-bold">{{ net_profit }} <small class="fs-7">ج.م</small></h4>
             </div>
         </div>
     </div>
 
     <!-- 3. قسم متابعة مواعيد الفقس المتوقعة وروابط السجلات -->
-    <div class="card mb-4 shadow-sm border-0">
-        <div class="card-header bg-warning text-dark fw-bold d-flex flex-wrap justify-content-between align-items-center gap-2">
-            <span>⏳ مواعيد الفقس القادمة والأيام المتبقية</span>
-            <div class="d-flex flex-wrap gap-2">
+    <div class="card mb-3 mb-md-4 shadow-sm border-0 rounded-3">
+        <div class="card-header bg-warning text-dark fw-bold d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2 py-3">
+            <span class="fs-6 fs-md-5">⏳ مواعيد الفقس القادمة والأيام المتبقية</span>
+            <div class="d-flex flex-wrap gap-1 w-100 w-md-auto">
                 <!-- أزرار الوصول السريع لكافة السجلات -->
-                <a href="{% url 'sales_history' %}" class="btn btn-sm btn-success fw-bold">💰 سجل المبيعات</a>
-                <a href="{% url 'expenses_history' %}" class="btn btn-sm btn-secondary fw-bold">📉 سجل المصروفات</a>
-                <a href="{% url 'deaths_history' %}" class="btn btn-sm btn-danger fw-bold">💀 سجل النفوق</a>
-                <a href="{% url 'hatch_history' %}" class="btn btn-sm btn-dark fw-bold">📜 أرشيف الفقس</a>
+                <a href="{% url 'sales_history' %}" class="btn btn-sm btn-success fw-bold flex-grow-1 flex-md-grow-0 fs-7">💰 المبيعات</a>
+                <a href="{% url 'expenses_history' %}" class="btn btn-sm btn-secondary fw-bold flex-grow-1 flex-md-grow-0 fs-7">📉 المصروفات</a>
+                <a href="{% url 'deaths_history' %}" class="btn btn-sm btn-danger fw-bold flex-grow-1 flex-md-grow-0 fs-7">💀 النفوق</a>
+                <a href="{% url 'hatch_history' %}" class="btn btn-sm btn-dark fw-bold flex-grow-1 flex-md-grow-0 fs-7">📜 أرشيف الفقس</a>
             </div>
         </div>
         <div class="card-body p-0 table-responsive">
             <table class="table table-hover text-center m-0 align-middle">
                 <thead class="table-light">
-                    <tr>
+                    <tr class="fs-7 fs-md-6">
                         <th>القص / الغرفة</th>
                         <th>تاريخ البيض</th>
                         <th>تاريخ الفقس المتوقع</th>
@@ -186,17 +186,17 @@
                         <th>الإجراء</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="fs-7 fs-md-6">
                     {% for record in upcoming_hatches %}
                     <tr>
                         <td class="fw-bold">{{ record.pigeon_pair.pair_code|default:record.loft_or_room.name }}</td>
                         <td>{{ record.incubation_start_date|date:"Y-m-d" }}</td>
                         <td>{{ record.expected_hatch_date|date:"Y-m-d" }}</td>
-                        <td><span class="badge bg-primary fs-6">{{ record.days_until_hatch }} يوم</span></td>
+                        <td><span class="badge bg-primary fs-7 fs-md-6">{{ record.days_until_hatch }} يوم</span></td>
                         <td>
                             <form action="{% url 'mark_egg_as_dead' record.id %}" method="POST" class="d-inline" onsubmit="return confirm('هل أنت تأكد أن البيض تلف/باظ وتريد حذفه من المتابعة وتسجيله في سجل النفوق؟');">
                                 {% csrf_token %}
-                                <button type="submit" class="btn btn-sm btn-outline-danger fw-bold">
+                                <button type="submit" class="btn btn-sm btn-outline-danger fw-bold py-1 px-2 fs-7">
                                     💀 نافق
                                 </button>
                             </form>
@@ -213,38 +213,38 @@
     <!-- 4. عرض الأقصاص (يظهر فقط إذا كان اختيار المربي هو السلاكات) -->
     {% if profile.farm_type == 'cages' %}
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h4 class="fw-bold m-0">🕊️ أقصاص السلاكات المسجلة</h4>
+        <h5 class="fw-bold m-0 fs-6 fs-md-4">🕊️ أقصاص السلاكات المسجلة</h5>
         <div>
-            <a href="{% url 'pairs_list' %}" class="btn btn-sm btn-outline-info me-1">عرض الكل</a>
-            <a href="{% url 'add_pair' %}" class="btn btn-sm btn-outline-primary">+ قص جديد</a>
+            <a href="{% url 'pairs_list' %}" class="btn btn-sm btn-outline-info me-1 fs-7">عرض الكل</a>
+            <a href="{% url 'add_pair' %}" class="btn btn-sm btn-outline-primary fs-7">+ قص جديد</a>
         </div>
     </div>
 
-    <div class="row">
+    <div class="row g-2 g-md-3">
         {% for pair in pairs %}
-        <div class="col-6 col-md-3 mb-3">
-            <div class="card h-100 shadow-sm text-center border-0">
+        <div class="col-6 col-md-3 mb-2">
+            <div class="card h-100 shadow-sm text-center border-0 rounded-3">
                 {% if pair.image %}
-                <img src="{{ pair.image.url }}" class="card-img-top" style="height: 150px; object-fit: cover;">
+                <img src="{{ pair.image.url }}" class="card-img-top rounded-top-3" style="height: 120px; object-fit: cover;">
                 {% else %}
-                <div class="bg-light d-flex align-items-center justify-content-center" style="height: 150px;">
-                    <span class="text-muted">بدون صورة</span>
+                <div class="bg-light d-flex align-items-center justify-content-center rounded-top-3" style="height: 120px;">
+                    <span class="text-muted fs-7">بدون صورة</span>
                 </div>
                 {% endif %}
                 <div class="card-body p-2">
-                    <h5 class="fw-bold mb-1">{{ pair.pair_code }}</h5>
-                    <p class="text-muted small m-0">{{ pair.breed|default:"غير محدد" }}</p>
-                    <small class="text-secondary">الغرفة: {{ pair.loft_or_room.name }}</small>
+                    <h6 class="fw-bold mb-1 fs-6 text-truncate">{{ pair.pair_code }}</h6>
+                    <p class="text-muted small m-0 fs-7 text-truncate">{{ pair.breed|default:"غير محدد" }}</p>
+                    <small class="text-secondary d-block fs-7 text-truncate">الغرفة: {{ pair.loft_or_room.name }}</small>
                 </div>
-                <div class="card-footer bg-transparent border-0 pb-2 d-flex gap-1">
-                    <a href="{% url 'pair_detail' pair.id %}" class="btn btn-sm btn-primary flex-grow-1">التفاصيل 📊</a>
-                    <a href="{% url 'edit_pair' pair.id %}" class="btn btn-sm btn-outline-warning" title="تعديل القص أو تبديل فرد">✏️</a>
+                <div class="card-footer bg-transparent border-0 pb-2 pt-0 d-flex gap-1">
+                    <a href="{% url 'pair_detail' pair.id %}" class="btn btn-sm btn-primary flex-grow-1 fs-7 py-1">التفاصيل 📊</a>
+                    <a href="{% url 'edit_pair' pair.id %}" class="btn btn-sm btn-outline-warning py-1 px-2 fs-7" title="تعديل القص أو تبديل فرد">✏️</a>
                 </div>
             </div>
         </div>
         {% empty %}
         <div class="col-12">
-            <div class="alert alert-info text-center">لا توجد أقصاص مسجلة حالياً. قم بإضافة قصص جديدة للبدء.</div>
+            <div class="alert alert-info text-center fs-7">لا توجد أقصاص مسجلة حالياً. قم بإضافة قصص جديدة للبدء.</div>
         </div>
         {% endfor %}
     </div>

@@ -21,15 +21,15 @@
             </a>
 
             <!-- زر القائمة للموبايل -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
-            <div class="collapse navbar-collapse" id="mainNavbar">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <div class="collapse navbar-collapse mt-2 mt-lg-0" id="mainNavbar">
+                <ul class="navbar-nav me-auto mb-3 mb-lg-0 gap-1">
                     <!-- رابط الصفحة الرئيسية (تظهر للجميع) -->
                     <li class="nav-item">
-                        <a class="nav-link active" href="{% url 'farm_home' %}">
+                        <a class="nav-link active py-2 px-3 rounded" href="{% url 'farm_home' %}">
                             <i class="bi bi-house-door-fill"></i> الرئيسية
                         </a>
                     </li>
@@ -37,41 +37,41 @@
                     <!-- روابط سريعة تظهر فقط للمستخدم المسجل -->
                     {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'add_production' %}">🪺 تسجيل إنتاج</a>
+                        <a class="nav-link py-2 px-3 rounded" href="{% url 'add_production' %}">🪺 تسجيل إنتاج</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'add_pair' %}">➕ إضافة قص</a>
+                        <a class="nav-link py-2 px-3 rounded" href="{% url 'add_pair' %}">➕ إضافة قص</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'add_sale' %}">💰 تسجيل بيع</a>
+                        <a class="nav-link py-2 px-3 rounded" href="{% url 'add_sale' %}">💰 تسجيل بيع</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'add_expense' %}">📉 تسجيل مصروفات</a>
+                        <a class="nav-link py-2 px-3 rounded" href="{% url 'add_expense' %}">📉 تسجيل مصروفات</a>
                     </li>
                     {% endif %}
                 </ul>
 
                 <!-- القسم الخاص بالحساب وتسجيل الدخول -->
-                <div class="d-flex align-items-center gap-2">
+                <div class="d-flex flex-column flex-lg-row align-items-start align-items-lg-center gap-2 pt-2 pt-lg-0 border-top border-lg-0 border-secondary">
                     {% if user.is_authenticated %}
                         <!-- يظهر للمستخدم المسجل -->
-                        <span class="text-light fw-bold me-2">
+                        <span class="text-light fw-bold mb-2 mb-lg-0 me-lg-2">
                             <i class="bi bi-person-circle"></i> أهلاً، {{ user.username }}
                         </span>
                         
                         <!-- زر تسجيل الخروج -->
-                        <form method="POST" action="{% url 'logout' %}" class="d-inline">
+                        <form method="POST" action="{% url 'logout' %}" class="d-inline w-100 w-lg-auto">
                             {% csrf_token %}
-                            <button type="submit" class="btn btn-outline-danger btn-sm">
+                            <button type="submit" class="btn btn-outline-danger btn-sm w-100 w-lg-auto fw-bold">
                                 <i class="bi bi-box-arrow-right"></i> خروج
                             </button>
                         </form>
                     {% else %}
                         <!-- يظهر فقط للزائر غير المسجل -->
-                        <a href="{% url 'login' %}" class="btn btn-outline-light btn-sm">
+                        <a href="{% url 'login' %}" class="btn btn-outline-light btn-sm w-100 w-lg-auto fw-bold">
                             <i class="bi bi-box-arrow-in-right"></i> تسجيل الدخول
                         </a>
-                        <a href="{% url 'register' %}" class="btn btn-success btn-sm fw-bold">
+                        <a href="{% url 'register' %}" class="btn btn-success btn-sm fw-bold w-100 w-lg-auto">
                             <i class="bi bi-person-plus-fill"></i> إنشاء حساب
                         </a>
                     {% endif %}
@@ -116,11 +116,10 @@
             setTimeout(function () {
                 let alerts = document.querySelectorAll('.alert-dismissible');
                 alerts.forEach(function (alert) {
-                    // استخدام Bootstrap API لإغلاق التنبيه بنعومة
                     let bsAlert = new bootstrap.Alert(alert);
                     bsAlert.close();
                 });
-            }, 4000); // 4000 مللي ثانية = 4 ثوانٍ
+            }, 4000);
         });
     </script>
 </body>
