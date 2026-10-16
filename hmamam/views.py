@@ -3,9 +3,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages  # إضافة مكتبة الرسائل
 from django.db.models import Sum
 from datetime import date
+from django.core.cache import cache  # استيراد مكتبة الكاش
 from .models import UserProfile, LoftOrRoom, PigeonPair, ProductionRecord, Sale, Expense
 from .forms import PigeonPairForm
-from .models import ProductionRecord, Sale, Expense  # عدل أسماء النماذج حسب المشروع لديك
 
 
 # 0. صفحة الهبوط للزوار غير المسجلين
@@ -24,30 +24,52 @@ def select_type_view(request):
         if farm_type in ['cages', 'collective', 'loft']:
             profile.farm_type = 'collective' if farm_type == 'loft' else farm_type
             profile.save()
+            
+            # مسح كاش لوحة التحكم ليعكس نوع التربية الجديد
+            cache.delete(f'farm_dashboard_stats_{request.user.id}')
+            
             messages.success(request, 'تم حفظ نظام التربية بنجاح! 🕊️')
             return redirect('farm_home')
     return render(request, 'farm/select_type.html', {'profile': profile})
 
 
-# 1. لوحة التحكم الرئيسية
+# 1. لوحة التحكم الرئيسية (مع الكاش اليدوي)
 @login_required
 def farm_home_view(request):
+    user_id = request.user.id
+    cache_key = f'farm_dashboard_stats_{user_id}'
+    
+    # محاولة جلب البيانات المحسوبة من الكاش
+    cached_data = cache.get(cache_key)
+    
+    if cached_data is None:
+        user_records = ProductionRecord.objects.filter(user=request.user)
+        user_sales = Sale.objects.filter(user=request.user)
+        user_expenses = Expense.objects.filter(user=request.user)
+
+        total_eggs = user_records.aggregate(total=Sum('eggs_found'))['total'] or 0
+        total_squabs = user_records.aggregate(total=Sum('squabs_hatched'))['total'] or 0
+        total_deaths = user_records.aggregate(total=Sum('deaths'))['total'] or 0
+        
+        total_sales_amount = user_sales.aggregate(total=Sum('price'))['total'] or 0
+        total_expenses_amount = user_expenses.aggregate(total=Sum('amount'))['total'] or 0
+        net_profit = total_sales_amount - total_expenses_amount
+
+        cached_data = {
+            'total_eggs': total_eggs,
+            'total_squabs': total_squabs,
+            'total_deaths': total_deaths,
+            'total_sales': total_sales_amount,
+            'total_expenses': total_expenses_amount,
+            'net_profit': net_profit,
+        }
+        # حفظ الإحصائيات في الكاش لمدة 15 دقيقة (900 ثانية)
+        cache.set(cache_key, cached_data, 900)
+
     profile, created = UserProfile.objects.get_or_create(user=request.user)
     
+    # جميع سجلات التحضين الجارية (تتغير ديناميكياً بناءً على تاريخ اليوم)
     user_records = ProductionRecord.objects.filter(user=request.user)
-    user_sales = Sale.objects.filter(user=request.user)
-    user_expenses = Expense.objects.filter(user=request.user)
-
-    total_eggs = user_records.aggregate(total=Sum('eggs_found'))['total'] or 0
-    total_squabs = user_records.aggregate(total=Sum('squabs_hatched'))['total'] or 0
-    total_deaths = user_records.aggregate(total=Sum('deaths'))['total'] or 0
-    
-    
-    total_sales_amount = user_sales.aggregate(total=Sum('price'))['total'] or 0
-    total_expenses_amount = user_expenses.aggregate(total=Sum('amount'))['total'] or 0
-    net_profit = total_sales_amount - total_expenses_amount
-
-    # جميع سجلات التحضين الجارية
     upcoming_hatches = user_records.filter(incubation_start_date__isnull=False)
 
     today = date.today()
@@ -66,18 +88,20 @@ def farm_home_view(request):
 
     context = {
         'profile': profile,
-        'total_eggs': total_eggs,
-        'total_squabs': total_squabs,
-        'total_deaths': total_deaths,
-        'total_sales': total_sales_amount,
-        'total_expenses': total_expenses_amount,
-        'net_profit': net_profit,
+        'total_eggs': cached_data['total_eggs'],
+        'total_squabs': cached_data['total_squabs'],
+        'total_deaths': cached_data['total_deaths'],
+        'total_sales': cached_data['total_sales'],
+        'total_expenses': cached_data['total_expenses'],
+        'net_profit': cached_data['net_profit'],
         'upcoming_hatches': active_upcoming_hatches, # المواعيد الحالية والقادمة فقط
         'hatches_due_today': hatches_due_today,     # المستحقة اليوم فقط
         'pairs': PigeonPair.objects.filter(user=request.user) if profile.farm_type == 'cages' else None,
         'rooms': LoftOrRoom.objects.filter(user=request.user)
     }
     return render(request, 'farm/dashboard.html', context)
+
+
 # 2. تفاصيل القص
 @login_required
 def pair_detail_view(request, pair_id):
@@ -90,7 +114,6 @@ def pair_detail_view(request, pair_id):
     total_deaths = records.aggregate(total=Sum('deaths'))['total'] or 0
     pair_sales_total = sales.aggregate(total=Sum('price'))['total'] or 0
         
-# التعديل هنا: الترتيب بحقل record_date
     recent_records = records.order_by('-record_date')[:10]
     context = {
         'pair': pair,
@@ -118,8 +141,6 @@ def add_production_view(request):
         room = LoftOrRoom.objects.filter(id=room_id, user=request.user).first() if room_id else (pair.loft_or_room if pair else None)
 
         if room:
-            # نتحقق: إذا كان المربي يسجل حصى جديد (eggs_found > 0) نأخذ تاريخ التراقد.
-            # أما إذا كان يسجل زغاليل فقط أو نافق، فلن نسجل تاريخ تراقد جديد لهذا السجل.
             final_incubation_date = incubation_start if (eggs_found > 0 and incubation_start) else None
 
             ProductionRecord.objects.create(
@@ -131,6 +152,10 @@ def add_production_view(request):
                 deaths=deaths,
                 incubation_start_date=final_incubation_date,
             )
+            
+            # إبطال كاش لوحة التحكم لتحديث إحصائيات البيض/الزغاليل/النافق فوراً
+            cache.delete(f'farm_dashboard_stats_{request.user.id}')
+            
             messages.success(request, 'تم تسجيل بيانات الإنتاج بنجاح! 🪺')
         else:
             messages.error(request, 'حدث خطأ: يُرجى اختيار غرفة أو قص صحيح.')
@@ -139,6 +164,7 @@ def add_production_view(request):
     pairs = PigeonPair.objects.filter(user=request.user)
     rooms = LoftOrRoom.objects.filter(user=request.user)
     return render(request, 'farm/add_production.html', {'pairs': pairs, 'rooms': rooms})
+
 
 # 4. إضافة قص جديد
 @login_required
@@ -159,6 +185,10 @@ def add_pair_view(request):
                 breed=breed,
                 image=image
             )
+            
+            # إبطال كاش لوحة التحكم لتحديث قائمة الأقصاص
+            cache.delete(f'farm_dashboard_stats_{request.user.id}')
+            
             messages.success(request, f'تمت إضافة القص {pair_code} بنجاح! 🕊️')
         else:
             messages.error(request, 'يرجى تحديد الغرفة الخاصة بالقص.')
@@ -178,6 +208,10 @@ def add_room_view(request):
                 user=request.user,
                 name=name
             )
+            
+            # إبطال كاش لوحة التحكم لتحديث قائمة الغرف
+            cache.delete(f'farm_dashboard_stats_{request.user.id}')
+            
             messages.success(request, f'تمت إضافة الغرفة ({name}) بنجاح! 🏠')
         return redirect('farm_home')
     
@@ -202,6 +236,10 @@ def add_sale_view(request):
             quantity=int(quantity),
             price=float(price)
         )
+        
+        # إبطال كاش لوحة التحكم لتحديث إجمالي المبيعات وصافي الأرباح
+        cache.delete(f'farm_dashboard_stats_{request.user.id}')
+        
         messages.success(request, f'تم تسجيل عملية بيع بـ {price} ج.م بنجاح! 💰')
         return redirect('farm_home')
     
@@ -221,15 +259,19 @@ def add_expense_view(request):
             title=title,
             amount=float(amount)
         )
+        
+        # إبطال كاش لوحة التحكم لتحديث إجمالي المصروفات وصافي الأرباح
+        cache.delete(f'farm_dashboard_stats_{request.user.id}')
+        
         messages.success(request, f'تم تسجيل مصروفات بقيمة {amount} ج.م! 📉')
         return redirect('farm_home')
     
     return render(request, 'farm/add_expense.html')
 
+
 # 8. صفحة سجل وأرشيف التذكيرات والفقس
 @login_required
 def hatch_history_view(request):
-    # جلب كافة السجلات التي تحتوي على تاريخ تحضين للمستخدم الحالي مرتبة من الأحدث للأقدم
     incubation_records = ProductionRecord.objects.filter(
         user=request.user,
         incubation_start_date__isnull=False
@@ -244,13 +286,12 @@ def hatch_history_view(request):
     return render(request, 'farm/hatch_history.html', context) 
 
 
-
-
 # قائمة أقصاص الإنتاج
 @login_required
 def pairs_list_view(request):
     pairs = PigeonPair.objects.filter(user=request.user)
     return render(request, 'farm/pairs_list.html', {'pairs': pairs})
+
 
 # تعديل قص (تغيير الصورة، النوع، أو أسباب التبديل)
 @login_required
@@ -261,6 +302,10 @@ def edit_pair_view(request, pair_id):
         form = PigeonPairForm(request.POST, request.FILES, instance=pair)
         if form.is_valid():
             form.save()
+            
+            # إبطال كاش لوحة التحكم لتحديث أي بيانات مرتبطة بالقص
+            cache.delete(f'farm_dashboard_stats_{request.user.id}')
+            
             messages.success(request, f'تم تحديث بيانات القص ({pair.pair_code}) بنجاح! 🕊️')
             return redirect('pair_detail', pair_id=pair.id)
     else:
@@ -269,17 +314,16 @@ def edit_pair_view(request, pair_id):
     return render(request, 'farm/edit_pair.html', {'form': form, 'pair': pair})       
 
 
-
-# 1. سجل المبيعات الكامل
+# سجل المبيعات الكامل
 @login_required
 def sales_history(view_request):
     sales = Sale.objects.filter(user=view_request.user).order_by('-sale_date')
     return render(view_request, 'farm/sales_history.html', {'sales': sales})
 
-# 1. عرض سجل النفوق الكامل
+
+# عرض سجل النفوق الكامل
 @login_required
 def deaths_history(view_request):
-    # الفلترة بالحقل الصحيح (deaths) والترتيب بتاريخ السجل (record_date)
     deaths = ProductionRecord.objects.filter(
         user=view_request.user, 
         deaths__gt=0
@@ -288,7 +332,7 @@ def deaths_history(view_request):
     return render(view_request, 'farm/deaths_history.html', {'deaths': deaths})
 
 
-# 2. معالجة زر "نافق" للبيض الكابس أو التالف
+# معالجة زر "نافق" للبيض الكابس أو التالف
 @login_required
 def mark_egg_as_dead(view_request, record_id):
     production = get_object_or_404(ProductionRecord, id=record_id, user=view_request.user)
@@ -299,25 +343,22 @@ def mark_egg_as_dead(view_request, record_id):
         production.eggs_found = 0       # تصفير البيض حتى يختفي من المتابعة
         production.save()
         
+        # إبطال كاش لوحة التحكم لتحديث إحصائيات البيض والنافق
+        cache.delete(f'farm_dashboard_stats_{view_request.user.id}')
+        
         messages.warning(view_request, f"تم تسجيل عدد ({dead_eggs}) حصى كنافق وحذفه من التنبيهات النشطة.")
     
     return redirect('farm_home')
 
 
-from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
-
 # سجل المصروفات الكامل مع خيار الطباعة
 @login_required
 def expenses_history(request):
-    # جلب جميع المصروفات للمستخدم مرتبة من الأحدث للأقدم
     expenses = Expense.objects.filter(user=request.user).order_by('-expense_date')
-    
-    # حساب إجمالي المصروفات
     total_expenses = expenses.aggregate(total=Sum('amount'))['total'] or 0
 
     context = {
         'expenses': expenses,
         'total_expenses': total_expenses,
     }
-    return render(request, 'farm/expenses_history.html', context)    
+    return render(request, 'farm/expenses_history.html', context)
