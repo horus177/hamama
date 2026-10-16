@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm
 from .models import OTPCode
-from .utils import send_otp_via_email  # دالة إرسال الإيميل المعرفة سابقاً
+from .utils import send_otp_via_email
 
 
 # --------------------------------------------------
@@ -13,16 +13,23 @@ from .utils import send_otp_via_email  # دالة إرسال الإيميل ال
 def register_view(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
+        email = request.POST.get('email', '').strip()
+        
         if form.is_valid():
+            if not email:
+                messages.error(request, 'يرجى إدخال بريد إلكتروني صالحة لتلقي رمز التحقق.')
+                return render(request, 'register.html', {'form': form})
+
             user = form.save(commit=False)
+            user.email = email
             user.is_active = False  # تفعيل الحساب يتطلب تأكيد OTP أولاً
             user.save()
 
-            # إنشاء كود OTP وإرساله
+            # إنشاء كود OTP وإرساله للبريد
             otp = OTPCode.generate_otp(user, purpose='VERIFY')
-            send_otp_via_email(user, otp.code, purpose="تأكيد الحساب")
+            send_otp_via_email(user.email, otp.code)
 
-            # حفظ معرف المستخدم في الجلسة لمتابعته في صفحة الـ OTP
+            # حفظ معرف المستخدم في الجلسة
             request.session['otp_user_id'] = user.id
             messages.success(request, 'تم إنشاء الحساب بنجاح! تم إرسال رمز التحقق إلى بريدك الإلكتروني.')
             return redirect('verify_otp')
@@ -72,22 +79,25 @@ def verify_otp_view(request):
 # --------------------------------------------------
 def resend_otp_view(request):
     user_id = request.session.get('otp_user_id') or request.session.get('reset_user_id')
-    if user_id:
-        user = User.objects.filter(id=user_id).first()
-        if user:
-            purpose = 'RESET' if request.session.get('reset_user_id') else 'VERIFY'
-            title = "إعادة تعيين كلمة السر" if purpose == 'RESET' else "تأكيد الحساب"
-            
-            otp = OTPCode.generate_otp(user, purpose=purpose)
-            send_otp_via_email(user, otp.code, purpose=title)
-            messages.info(request, 'تم إعادة إرسال رمز تحقق جديد إلى بريدك الإلكتروني.')
-            
-            if purpose == 'RESET':
-                return redirect('reset_password')
-            return redirect('verify_otp')
+    
+    if request.method == 'POST' or request.method == 'GET':
+        if user_id:
+            user = User.objects.filter(id=user_id).first()
+            if user and user.email:
+                purpose = 'RESET' if request.session.get('reset_user_id') else 'VERIFY'
+                
+                otp = OTPCode.generate_otp(user, purpose=purpose)
+                send_otp_via_email(user.email, otp.code)
+                messages.info(request, 'تم إعادة إرسال رمز تحقق جديد إلى بريدك الإلكتروني.')
+                
+                if purpose == 'RESET':
+                    return redirect('reset_password')
+                return redirect('verify_otp')
 
-    messages.error(request, 'تعذر إعادة إرسال الرمز، يرجى إعادة المحاولة.')
-    return redirect('login')
+        messages.error(request, 'تعذر إعادة إرسال الرمز، يرجى إعادة المحاولة.')
+        return redirect('login')
+
+    return render(request, 'resend_otp.html')
 
 
 # --------------------------------------------------
@@ -98,21 +108,21 @@ def forgot_password_view(request):
         email_or_username = request.POST.get('identifier', '').strip()
         user = User.objects.filter(email=email_or_username).first() or User.objects.filter(username=email_or_username).first()
 
-        if user:
+        if user and user.email:
             otp = OTPCode.generate_otp(user, purpose='RESET')
-            send_otp_via_email(user, otp.code, purpose="إعادة تعيين كلمة السر")
+            send_otp_via_email(user.email, otp.code)
             
             request.session['reset_user_id'] = user.id
             messages.success(request, 'تم إرسال رمز استعادة كلمة السر إلى بريدك الإلكتروني.')
             return redirect('reset_password')
         else:
-            messages.error(request, 'لم نجد حساباً مرتبطة بهذه البيانات.')
+            messages.error(request, 'لم نجد حساباً مرتبطاً بهذه البيانات أو لا يحتوي على بريد إلكتروني.')
 
     return render(request, 'forgot_password.html')
 
 
 # --------------------------------------------------
-# 5. أدخال الـ OTP وكلمة السر الجديدة
+# 5. إدخال الـ OTP وكلمة السر الجديدة
 # --------------------------------------------------
 def reset_password_view(request):
     user_id = request.session.get('reset_user_id')

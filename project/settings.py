@@ -134,3 +134,16 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 LOGIN_REDIRECT_URL = 'farm_home'  # الصفحة الرئيسية بعد الدخول
 LOGOUT_REDIRECT_URL = 'login'      # صفحة الدخول بعد الخروج
 LOGIN_URL = 'login'                # صفحة الدخول للمستخدم غير المسجل
+
+
+# إعدادات إرسال البريد الإلكتروني (Gmail SMTP)
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+# اكتب إيميلك وكلمة سر التطبيقات هنا:
+EMAIL_HOST_USER = 'ahmedetman177@gmail.com' # إيميلك
+EMAIL_HOST_PASSWORD = 'jjjb fejt gvmv masy' # باسورد التطبيقات (مش باسورد الإيميل العادي)
+DEFAULT_FROM_EMAIL = 'ahmedetman177@gmail.com'   # ضع كلمة سر التطبيقات (App Password) المكونة من 16 حرفاً
+DEFAULT_FROM_EMAIL = 'مزرعتي <ahmedetman177@gmail.com>'
